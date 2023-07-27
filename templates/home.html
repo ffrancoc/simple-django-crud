@@ -1,0 +1,62 @@
+{% extends './layout/index.html' %}
+{% block titulo %}Página Home{% endblock %}
+{% block contenido %}
+    {% include './partials/navbar.html' %}
+    <div class="d-flex justify-content-center align-items-center vw-100 vh-100">
+        <table class="table m-5">
+            <thead class="table-dark">
+                <tr>
+                    <td>NOMBRE</td>
+                    <td>APELLIDO</td>
+                    <td>GENERO</td>
+                    <td>FECHA NACIMIENTO</td>
+                    <td>TELEFONO</td>
+                    <td>CORREO</td>
+                    <td></td>                    
+                </tr>
+            </thead>
+            <tbody>
+                {%now 'd m Y' as current_date%}                
+                {% for p in personas %}
+                    
+                    <tr>                                                
+                        <td>{{p.nombre}}</td>
+                        <td>{{p.apellido}}</td>
+                        <td>{% if p.genero == 'M'%}🚹{%elif p.genero == 'F'%}🚺{%else%}🌈{%endif%}</td>          
+                        
+                        {% with p.fecha_nacimiento as  birthday %}{% endwith %}
+                        <td>📆 {{p.fecha_nacimiento|date:"d m Y"}}</td>
+                        <td>📞 {{p.telefono}}</td>
+                        <td>📧 {{p.correo}}</td>
+                        <td>
+                            <div class="d-flex">
+                                <form action="{% url 'form_update_persona' %}" method="get">
+                                    <input type="text" value="{{p.id}}" name="txtId" hidden>
+                                    <button type="submit" style="background-color:#fff;border:none;"><i class="bi bi-pencil-square"></i></button>                            
+                                </form>           
+
+                                <button id="btnDelete" data-url="{% url 'form_delete_persona' id=p.id %}" onclick="onDeletePersona({{p.id}}, '{{p.nombre}}')" style="background-color:#fff;border:none;"><i class="bi bi-trash3-fill"></i></button>                                                                     
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>    
+{% endblock  %}
+{% block script %}
+<script>
+    const btnDelete = document.getElementById("btnDelete");
+
+    function onDeletePersona(id, nombre){        
+
+        let resp = confirm("DESEA ELIMINAR EL REGISTRO: "+nombre);
+        if (resp === true){            
+            let delete_url = btnDelete.dataset.url;            
+            const url = delete_url;
+            window.location.href = url;
+        }
+        
+    }
+</script>
+{% endblock  %}

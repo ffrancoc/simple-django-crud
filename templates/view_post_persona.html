@@ -1,0 +1,7 @@
+{% extends './layout/index.html' %}
+{% block titulo %}Página Nuevo Registro{% endblock %}
+{% block contenido %}
+    {% include './partials/navbar.html' %}
+    {%include './partials/messages.html'%}
+    {% include './forms/post_persona.html' %}
+{% endblock  %}
